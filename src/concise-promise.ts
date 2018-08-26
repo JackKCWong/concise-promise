@@ -19,8 +19,11 @@ class ConcisePromiseHanlder<T> implements ProxyHandler<Promise<T>>{
     }
 
     get(lastPromise: Promise<T>, p: PropertyKey, receiver: any): any {
-        if (p === 'then') {
-            return lastPromise.then;
+        switch (p) {
+            case 'then':
+                return lastPromise.then.bind(lastPromise);
+            case 'catch':
+                return lastPromise.catch.bind(lastPromise);
         }
 
         const original = (<any>this.promiseKeeper)[p];
