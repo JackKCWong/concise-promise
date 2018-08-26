@@ -2,7 +2,7 @@
   "name": "concise-promise",
   "version": "0.1.0",
   "description": "a library to make working with Promise chain more concise",
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "scripts": {
     "test": "tsc -p . && mocha --ui tdd --recursive ./lib/test/**/*.test.js",
     "watch": "tsc -w -p ."
@@ -17,5 +17,9 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JackKCWong/concise-promise"
   }
 }
