@@ -1,3 +1,4 @@
-import {concise} from "./concise-promise"
 
-export = concise;
+
+export { concise as c, RESOLVED } from "./concise-promise";
+

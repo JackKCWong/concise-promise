@@ -9,6 +9,8 @@ export type Concise<T> = {
 }
 
 
+export const RESOLVED = Symbol();
+
 class ConcisePromiseHanlder<T> implements ProxyHandler<Promise<T>>{
     promiseKeeper: T;
 
@@ -25,9 +27,11 @@ class ConcisePromiseHanlder<T> implements ProxyHandler<Promise<T>>{
         if (typeof original === 'function') {
             const self = this.promiseKeeper;
             return function (...args: any[]): any {
-                return lastPromise.then(arg => {
-                    if(arg) {
-                        return original.bind(self, arg)(args);
+                return lastPromise.then(resolved => {
+                    if (args[0] === RESOLVED) {
+                        return original.bind(self, resolved)(args.slice(1));
+                    } else if (original.length === args.length + 1) {
+                        return original.bind(self, resolved)(args);
                     } else {
                         return original.bind(self)(args);
                     }
