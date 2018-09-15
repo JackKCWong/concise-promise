@@ -1,13 +1,17 @@
 {
   "name": "concise-promise",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "a library to make working with Promise chain more concise",
   "main": "lib/index.js",
   "scripts": {
     "test": "tsc -p . && mocha --ui tdd --recursive ./lib/test/**/*.test.js",
     "watch": "tsc -w -p ."
   },
-  "keywords": ["promise", "chain", "concise"],
+  "keywords": [
+    "promise",
+    "chain",
+    "concise"
+  ],
   "author": "jackkcwong",
   "license": "ISC",
   "devDependencies": {

@@ -1,17 +1,17 @@
 
 
-type ReturnType<T> = T extends (...args: any[]) => Promise<infer R> ? Promise<R> :
-    T extends (...args: any[]) => infer R ? Promise<R> : any;
+type Promisify<T> = T extends (...args: any[]) => Promise<infer R> ? Promise<R> :
+    T extends (...args: any[]) => infer R ? Promise<R> : T;
 
 
-export type Concise<T> = {
-    [M in keyof T]: (...args: any[]) => Concise<T> & ReturnType<T[M]>;
+export type PromiseKeeper<T> = {
+    [M in keyof T]: (...args: any[]) => PromiseKeeper<T> & Promisify<T[M]>;
 }
 
 
 export const RESOLVED = Symbol();
 
-class ConcisePromiseHanlder<T> implements ProxyHandler<Promise<T>>{
+class MemberMethodHanlder<T> implements ProxyHandler<Promise<T>>{
     promiseKeeper: T;
 
     constructor(promiseKeeper: T) {
@@ -46,7 +46,7 @@ class ConcisePromiseHanlder<T> implements ProxyHandler<Promise<T>>{
     }
 }
 
-export function concise<T extends object>(obj: T): Concise<T> {
+export function pledge<T extends object>(obj: T): PromiseKeeper<T> {
     const handler: ProxyHandler<T> = {
         get(targetThis: T, p: PropertyKey, receiver: any): any {
             const original = (<any>targetThis)[p];
@@ -54,7 +54,7 @@ export function concise<T extends object>(obj: T): Concise<T> {
                 return function (...args: any[]): any {
                     const originalOutput = original.bind(targetThis)(args);
                     if (originalOutput instanceof Promise) {
-                        return new Proxy(originalOutput, new ConcisePromiseHanlder(targetThis));
+                        return new Proxy(originalOutput, new MemberMethodHanlder(targetThis));
                     } else {
                         return originalOutput;
                     }
@@ -65,6 +65,6 @@ export function concise<T extends object>(obj: T): Concise<T> {
         }
     };
 
-    return <Concise<T>>new Proxy(obj, handler);
+    return <PromiseKeeper<T>>new Proxy(obj, handler);
 }
 

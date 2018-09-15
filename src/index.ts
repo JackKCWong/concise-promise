@@ -1,4 +1,4 @@
 
 
-export { concise as c, RESOLVED } from "./concise-promise";
+export { pledge, RESOLVED } from "./concise-promise";
 
